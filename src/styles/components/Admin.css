@@ -1,0 +1,121 @@
+/* Admin Styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+
+.login-form {
+    padding: var(--spacing-xl);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form input {
+    padding: var(--spacing-sm);
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-sm);
+}
+
+.login-form button {
+    padding: var(--spacing-sm);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+}
+
+/* Dashboard */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.admin-search {
+    padding: var(--spacing-sm);
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-sm);
+    width: 300px;
+}
+
+.refresh-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+}
+
+.table-container {
+    overflow-x: auto;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: var(--color-secondary);
+}
+
+.text-red-600 {
+    color: #dc2626;
+}
+
+.text-green-600 {
+    color: #16a34a;
+}
+
+.action-btn {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.825rem;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+    background: white;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.no-results {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--color-text-muted);
+}
+
+.edit-input {
+    width: 80px;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}

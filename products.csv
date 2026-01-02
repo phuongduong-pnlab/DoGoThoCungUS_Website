@@ -1,0 +1,6 @@
+ID,Name,Category,Description,Images,Variants,Price,Cost,Profit,Stock
+1,Luxury Teak Sofa,Furniture,Handcrafted teak wood sofa with premium cushioning.,https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80,"[{""size"":""3-Seater"",""color"":""Beige"",""price"":1200},{""size"":""2-Seater"",""color"":""Beige"",""price"":900}]",1200,600,600,5
+2,Blue Ming Vase,Ceramics,Authentic Ming-style blue and white porcelain vase.,https://images.unsplash.com/photo-1612152605332-2e9538843d81?auto=format&fit=crop&q=80,"[{""size"":""Large"",""price"":300},{""size"":""Medium"",""price"":200}]",300,100,200,10
+3,Antique Copper Pot,Copper,Hammered copper pot perfect for kitchen decoration.,https://images.unsplash.com/photo-1582260273767-4bd9d5543c7b?auto=format&fit=crop&q=80,"[{""size"":""5L"",""price"":150},{""size"":""3L"",""price"":100}]",150,50,100,2
+4,Modern Oak Coffee Table,Furniture,Minimalist oak coffee table with glass top.,https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&q=80,"[{""color"":""Natural"",""price"":450},{""color"":""Dark Stain"",""price"":480}]",450,200,250,15
+5,Glazed Ceramic Bowl,Ceramics,Hand-thrown ceramic bowl with sea-foam glaze.,https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80,"[{""size"":""Small"",""price"":45}]",45,10,35,50

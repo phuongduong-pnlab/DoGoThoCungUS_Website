@@ -1,0 +1,104 @@
+---
+
+---
+
+<footer class="site-footer section">
+    <div class="container footer-grid">
+        <div class="footer-brand">
+            <h3>DiepMai</h3>
+            <p>
+                Luxury furniture, authentic ceramics, and fine copper ware for
+                the modern home.
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="/products?category=furniture">Furniture</a></li>
+                <li><a href="/products?category=ceramics">Ceramics</a></li>
+                <li><a href="/products?category=copper">Copper Ware</a></li>
+                <li><a href="/deals">Hot Deals</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-contact">
+            <h4>Contact</h4>
+            <ul>
+                <li>123 Example Street, City, State</li>
+                <li>+1 (555) 123-4567</li>
+                <li>contact@example.com</li>
+            </ul>
+        </div>
+
+        <div class="footer-map">
+            <!-- Map placeholder as requested -->
+            <div class="map-placeholder">
+                <span>Map Location</span>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>
+            &copy; {new Date().getFullYear()} DiepMai Store. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<style>
+    .site-footer {
+        background-color: var(--color-secondary);
+        color: var(--color-surface);
+        margin-top: auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-xl);
+    }
+
+    h3,
+    h4 {
+        color: var(--color-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    a {
+        color: var(--color-background);
+        opacity: 0.8;
+        transition: opacity var(--transition-normal);
+    }
+
+    a:hover {
+        opacity: 1;
+        color: var(--color-primary);
+    }
+
+    .map-placeholder {
+        width: 100%;
+        height: 150px;
+        background-color: rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--radius-md);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: var(--spacing-lg);
+        margin-top: var(--spacing-lg);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.875rem;
+        opacity: 0.6;
+    }
+</style>

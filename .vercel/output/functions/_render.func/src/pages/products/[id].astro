@@ -1,0 +1,41 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductDetail from "../../components/ProductDetail";
+import { getProducts } from "../../lib/server/googleSheets";
+
+const { id } = Astro.params;
+const products = await getProducts();
+const product = products.find((p) => p.id === id);
+
+if (!product) {
+    return Astro.redirect("/404");
+}
+---
+
+<Layout title={product.name} description={product.description}>
+    <div class="container section">
+        <div class="breadcrumbs">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="/products">Products</a>
+            <span>/</span>
+            <span>{product.name}</span>
+        </div>
+
+        <ProductDetail product={product} client:load />
+    </div>
+</Layout>
+
+<style>
+    .breadcrumbs {
+        margin-bottom: var(--spacing-lg);
+        color: var(--color-text-muted);
+        font-size: 0.875rem;
+    }
+    .breadcrumbs a:hover {
+        color: var(--color-primary);
+    }
+    .breadcrumbs span {
+        margin: 0 var(--spacing-xs);
+    }
+</style>

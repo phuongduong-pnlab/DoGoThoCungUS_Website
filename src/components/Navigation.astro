@@ -1,0 +1,221 @@
+---
+const links = [
+    { text: "Products", href: "/products" },
+    { text: "Hot Deals", href: "/deals" },
+    { text: "About", href: "/about" },
+    { text: "Locations", href: "/locations" },
+    { text: "Contact", href: "/contact" },
+];
+---
+
+<header id="main-header">
+    <div class="container header-inner">
+        <a href="/" class="logo">
+            <span class="logo-text">DiepMai</span>
+            <span class="slogan">Furniture & Decor</span>
+        </a>
+
+        <nav class="desktop-nav">
+            <ul>
+                {
+                    links.map((link) => (
+                        <li>
+                            <a href={link.href}>{link.text}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <button id="mobile-menu-btn" aria-label="Toggle menu">
+            <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <div id="mobile-menu-overlay">
+        <nav class="mobile-nav">
+            <ul>
+                {
+                    links.map((link) => (
+                        <li>
+                            <a href={link.href}>{link.text}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+            <button id="close-menu-btn" aria-label="Close menu"> Close </button>
+        </nav>
+    </div>
+</header>
+
+<style>
+    #main-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--transition-normal);
+    }
+
+    #main-header.hidden {
+        transform: translateY(-100%);
+    }
+
+    .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 80px;
+    }
+
+    .logo {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+    }
+
+    .logo-text {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-primary-dark);
+    }
+
+    .slogan {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        letter-spacing: 0.05em;
+    }
+
+    .desktop-nav ul {
+        display: flex;
+        gap: var(--spacing-lg);
+        list-style: none;
+    }
+
+    .desktop-nav a {
+        font-weight: 500;
+        color: var(--color-secondary);
+        transition: color var(--transition-normal);
+    }
+
+    .desktop-nav a:hover {
+        color: var(--color-primary);
+    }
+
+    #mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--color-secondary);
+    }
+
+    #mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--color-background);
+        z-index: 1001;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(100%);
+        transition: transform var(--transition-normal);
+    }
+
+    #mobile-menu-overlay.open {
+        transform: translateX(0);
+    }
+
+    .mobile-nav ul {
+        list-style: none;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+
+    .mobile-nav a {
+        font-size: 1.5rem;
+        font-family: var(--font-serif);
+        font-weight: 700;
+        color: var(--color-secondary);
+    }
+
+    #close-menu-btn {
+        margin-top: var(--spacing-xl);
+        background: none;
+        border: 1px solid var(--color-secondary);
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .desktop-nav {
+            display: none;
+        }
+
+        #mobile-menu-btn {
+            display: block;
+        }
+    }
+</style>
+
+<script>
+    // Mobile Menu Logic
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const closeBtn = document.getElementById("close-menu-btn");
+    const overlay = document.getElementById("mobile-menu-overlay");
+
+    menuBtn?.addEventListener("click", () => {
+        overlay?.classList.add("open");
+        document.body.style.overflow = "hidden";
+    });
+
+    const closeMenu = () => {
+        overlay?.classList.remove("open");
+        document.body.style.overflow = "";
+    };
+
+    closeBtn?.addEventListener("click", closeMenu);
+
+    // Close when clicking a link
+    overlay?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", closeMenu);
+    });
+
+    // Scroll Logic
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById("main-header");
+
+    window.addEventListener("scroll", () => {
+        if (!header) return;
+
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+            header.classList.add("hidden");
+        } else {
+            header.classList.remove("hidden");
+        }
+        lastScrollY = window.scrollY;
+    });
+</script>
