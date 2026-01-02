@@ -34,19 +34,23 @@ export async function getProducts() {
     return getMockProducts();
   }
 
-  const sheets = google.sheets({ version: 'v4', auth });
-
   try {
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    console.log("Fetching range from Sheets:", SPREADSHEET_ID);
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: 'Products!A2:J', // Adjust range as needed
     });
 
     const rows = response.data.values;
-    if (!rows || rows.length === 0) return [];
+    if (!rows || rows.length === 0) {
+      console.log("No data found in sheet.");
+      return [];
+    }
 
     return rows
-      .filter(row => row[0]) // Filter rows without ID
+      .filter(row => row && row[0]) // Filter rows without ID
       .map(row => ({
         id: row[0],
         name: row[1] || 'Untitled',
@@ -59,8 +63,11 @@ export async function getProducts() {
         profit: row[8],
         stock: row[9],
       }));
-  } catch (error) {
-    console.error('Error fetching from Sheets:', error);
+  } catch (error: any) {
+    console.error('CRITICAL: Error fetching from Sheets:', error.message);
+    if (error.response) {
+      console.error('Gaxios Error details:', error.response.data);
+    }
     return [];
   }
 }
