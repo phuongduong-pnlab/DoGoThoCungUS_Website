@@ -6,6 +6,9 @@ import ProductList from "../components/ProductList";
 <Layout title="">
 	<!-- Hero Section -->
 	<section class="hero">
+		<video autoplay muted loop playsinline class="hero-video">
+			<source src="/Đồ Gỗ Thờ Cúng US.webm" type="video/webm" />
+		</video>
 		<div class="container hero-content">
 			<h1>Exquisite Furniture & <br />Timeless Decor</h1>
 			<p>
@@ -45,19 +48,42 @@ import ProductList from "../components/ProductList";
 
 <style>
 	.hero {
+		position: relative;
 		height: 80vh;
 		min-height: 500px;
-		background:
-			linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-			url("https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80");
-		background-size: cover;
-		background-position: center;
 		display: flex;
 		align-items: center;
 		color: var(--color-surface);
+		overflow: hidden;
+	}
+
+	.hero::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.4);
+		z-index: 1;
+	}
+
+	.hero-video {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+		z-index: 0;
+		transform: translate(-50%, -50%);
+		object-fit: cover;
 	}
 
 	.hero-content {
+		position: relative;
+		z-index: 2;
 		max-width: 600px;
 	}
 
