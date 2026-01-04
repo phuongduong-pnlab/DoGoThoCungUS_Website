@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import ProductList from "../components/ProductList";
 ---
 
-<Layout title="">
+<Layout title="" mainClass="home-main">
 	<!-- Hero Section -->
 	<section class="hero">
 		<video autoplay muted loop playsinline class="hero-video">
@@ -47,10 +47,14 @@ import ProductList from "../components/ProductList";
 </Layout>
 
 <style>
+	:global(.home-main) {
+		margin-top: 0 !important;
+	}
+
 	.hero {
 		position: relative;
-		height: 80vh;
-		min-height: 500px;
+		height: 100vh;
+		min-height: 600px;
 		display: flex;
 		align-items: center;
 		color: var(--color-surface);
@@ -152,3 +156,11 @@ import ProductList from "../components/ProductList";
        I will rely on a new update to ProductList.tsx in next step to fix the CSS class usage.
     */
 </style>
+
+<script>
+	// Slow down hero video playback speed
+	const heroVideo = document.querySelector(".hero-video") as HTMLVideoElement;
+	if (heroVideo) {
+		heroVideo.playbackRate = 0.5; // Slow down for a premium feel
+	}
+</script>
