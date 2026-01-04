@@ -83,7 +83,16 @@ export default function ProductDetail({ product }: { product: Product }) {
 
                 {/* Actions */}
                 <div className="actions-section">
-                    <button className="btn-primary-large">
+                    <button 
+                        className="btn-primary-large"
+                        onClick={() => {
+                            const variantStr = selectedVariant 
+                                ? ` (${selectedVariant.size || ''} ${selectedVariant.color || ''})`.trim() 
+                                : '';
+                            const message = encodeURIComponent(`Hi, I am interested in "${product.name}${variantStr}". Please provide more details on how to order.`);
+                            window.location.href = `/contact?message=${message}`;
+                        }}
+                    >
                         Contact to Order
                     </button>
                     <button className="btn-secondary-large">

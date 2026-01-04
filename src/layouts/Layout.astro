@@ -21,7 +21,7 @@ const {
         <meta charset="UTF-8" />
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -29,14 +29,29 @@ const {
             rel="stylesheet"
         />
         <meta name="generator" content={Astro.generator} />
-        <title>{title} | DiepMai Store</title>
-    </head>
+        <title>
+            {title ? `${title} | Đồ Gỗ Thờ Cúng US` : "Đồ Gỗ Thờ Cúng US"}
+        </title></head
+    >
+
     <body>
         <Navigation />
         <main>
             <slot />
         </main>
         <Footer />
+        <script>
+            // Protection: Disable right-click on all images
+            document.addEventListener(
+                "contextmenu",
+                (e) => {
+                    if ((e.target as HTMLElement).tagName === "IMG") {
+                        e.preventDefault();
+                    }
+                },
+                false,
+            );
+        </script>
     </body>
 </html>
 

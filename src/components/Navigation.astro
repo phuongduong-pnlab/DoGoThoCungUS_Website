@@ -11,8 +11,8 @@ const links = [
 <header id="main-header">
     <div class="container header-inner">
         <a href="/" class="logo">
-            <span class="logo-text">DiepMai</span>
-            <span class="slogan">Furniture & Decor</span>
+            <img src="/logo.webp" alt="Đồ Gỗ Thờ Cúng US" class="logo-img" />
+            <span class="slogan">Đồ Gỗ Thờ Cúng US</span>
         </a>
 
         <nav class="desktop-nav">
@@ -87,21 +87,28 @@ const links = [
 
     .logo {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-md);
         line-height: 1;
+        text-decoration: none;
     }
 
-    .logo-text {
-        font-family: var(--font-serif);
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--color-primary-dark);
+    .logo-img {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
     }
 
     .slogan {
-        font-size: 0.75rem;
-        color: var(--color-text-muted);
-        letter-spacing: 0.05em;
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 0.9rem;
+        color: var(--color-primary);
+        border-left: 1px solid #ddd;
+        padding-left: var(--spacing-md);
+        letter-spacing: 0.02em;
+        display: block;
     }
 
     .desktop-nav ul {

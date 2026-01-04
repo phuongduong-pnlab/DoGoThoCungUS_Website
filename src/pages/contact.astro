@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const messageValue = Astro.url.searchParams.get("message") || "";
 ---
 
 <Layout title="Contact Us">
@@ -65,7 +67,9 @@ import Layout from "../layouts/Layout.astro";
                             name="message"
                             rows="5"
                             required
-                            placeholder="How can we help you?"></textarea>
+                            placeholder="How can we help you?"
+                            >{messageValue}</textarea
+                        >
                     </div>
 
                     <button type="submit" class="btn-submit"

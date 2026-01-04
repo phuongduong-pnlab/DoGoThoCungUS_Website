@@ -1,14 +1,18 @@
 /* Global Design System */
 :root {
   /* Premium Color Palette */
-  --color-primary: #D4AF37; /* Metallic Gold */
-  --color-primary-dark: #AA8C2C;
-  --color-secondary: #0F172A; /* Deep Navy/Slate */
-  --color-background: #FAFAF9; /* Warm Off-white */
+  --color-primary: #d33e2f;
+  /* Brand Red */
+  --color-primary-dark: #a12d22;
+  --color-secondary: #0F172A;
+  /* Deep Navy/Slate */
+  --color-background: #FAFAF9;
+  /* Warm Off-white */
   --color-surface: #FFFFFF;
   --color-text: #334155;
   --color-text-muted: #64748B;
-  --color-accent: #B45309; /* Copper */
+  --color-accent: #B45309;
+  /* Copper */
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -20,13 +24,14 @@
 
   /* Typography */
   --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Playfair Display', serif; /* Optional for headings */
+  --font-serif: 'Playfair Display', serif;
+  /* Optional for headings */
 
   /* Border Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -37,7 +42,9 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -51,7 +58,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-serif);
   font-weight: 700;
   color: var(--color-secondary);
