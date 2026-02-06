@@ -1,46 +1,149 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProductList from "../components/ProductList";
+import LovedProducts from "../components/LovedProducts";
+import CustomerMap from "../components/CustomerMap";
+
+const messageValue = Astro.url.searchParams.get("message") || "";
 ---
 
 <Layout title="" mainClass="home-main">
 	<!-- Hero Section -->
 	<section class="hero">
-		<video autoplay muted loop playsinline class="hero-video">
+		<video
+			autoplay
+			muted
+			loop
+			playsinline
+			class="hero-video"
+			style="width: 100%; object-fit: contain; height: 100%;padding-top:80px"
+		>
 			<source src="/Đồ Gỗ Thờ Cúng US.webm" type="video/webm" />
 		</video>
-		<div class="container hero-content">
-			<h1>Exquisite Furniture & <br />Timeless Decor</h1>
-			<p>
-				Discover our collection of handcrafted wood furniture, premium
-				ceramics, and copper masterpieces.
-			</p>
-			<a href="#shop" class="btn btn-primary">Shop Collection</a>
-		</div>
 	</section>
 
 	<!-- Shop Section -->
-	<section id="shop" class="section">
+	<section id="products" class="section">
 		<div class="container">
-			<h2 class="section-title">Our Collections</h2>
+			<h2 class="section-title">Sản Phẩm</h2>
 			<ProductList client:load />
 		</div>
 	</section>
 
 	<!-- About Simplified -->
-	<section id="about" class="section bg-light">
-		<div class="container">
-			<div class="about-grid">
-				<div class="about-text">
-					<h2 class="section-title">About DiepMai</h2>
-					<p>
-						We bring you the finest selection of traditional
-						craftsmanship and modern design. From the sturdy
-						elegance of our wooden furniture to the delicate beauty
-						of our ceramics.
+	<section
+		id="about"
+		class="section bg-light"
+		style="background-color: #222831;padding-top: var(--spacing-2xl);padding-bottom: var(--spacing-2xl);"
+	>
+		<div
+			class="container"
+			style="padding: var(--spacing-2xl) 20px var(--spacing-2xl) 20px;"
+		>
+			<div class="about-grid row">
+				<!-- Image placeholder would go here -->
+				<img
+					src="/about-img.webp"
+					alt="About Us"
+					class="col-md-6 w-100"
+				/>
+				<div class="about-text col-md-6">
+					<h2
+						class="section-title"
+						style="color: white; padding-top: var(--spacing-xl);"
+					>
+						Đồ Gỗ Thờ Cúng US
+					</h2>
+					<p style="color: white; font-size: 1.2rem;">
+						Với trên 25 năm kinh nghiệm trong lĩnh vực Đồ Gỗ. Chúng
+						tôi dùng chất lượng để khẳng định uy tín suốt nhiều năm
+						qua
+					</p>
+					<p
+						style="color: white; padding-top: var(--spacing-md); font-size: 1.2rem;"
+					>
+						With over 25 years of experience in the Wood Furniture
+						industry, we have been using quality to establish our
+						reputation throughout the years
 					</p>
 				</div>
-				<!-- Image placeholder would go here -->
+			</div>
+		</div>
+	</section>
+
+	<!-- Loved Products Section -->
+	<section id="loved" class="section bg-light-soft">
+		<div class="container">
+			<h2 class="section-title">Sản Phẩm Đang Quan Tâm</h2>
+			<LovedProducts client:load />
+		</div>
+	</section>
+
+	<!-- Customer Map Section -->
+	<section id="customer-map" class="section">
+		<div class="container">
+			<CustomerMap client:only="react" />
+		</div>
+	</section>
+
+	<!-- Contact Section -->
+	<section id="contact" class="section" style="padding-top:0">
+		<div class="container">
+			<h2 class="section-title">Liên Hệ</h2>
+			<div class="row" style="justify-content: center;">
+				<div class="col-md-6">
+					<div class="contact-form-wrapper">
+						<form
+							action="https://api.web3forms.com/submit"
+							method="POST"
+							class="contact-form"
+						>
+							<input
+								type="hidden"
+								name="access_key"
+								value="10d6183a-956b-4ba4-8616-619b093dac0e"
+							/>
+
+							<div class="form-group">
+								<label for="name">Tên</label>
+								<input
+									type="text"
+									id="name"
+									name="name"
+									required
+									placeholder="Tên anh/chị"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="email">Email</label>
+								<input
+									type="email"
+									id="email"
+									name="email"
+									required
+									placeholder="your.email@example.com"
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="message">Tin Nhắn</label>
+								<textarea
+									id="message"
+									name="message"
+									rows="5"
+									required
+									placeholder="Cảm ơn anh/chị đã quan tâm đến sản phẩm của chúng tôi"
+									>{messageValue}</textarea
+								>
+							</div>
+
+							<button type="submit" class="btn-submit"
+								>Gửi tin nhắn</button
+							>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -61,7 +164,7 @@ import ProductList from "../components/ProductList";
 		overflow: hidden;
 	}
 
-	.hero::before {
+	/* .hero::before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -70,7 +173,7 @@ import ProductList from "../components/ProductList";
 		height: 100%;
 		background: rgba(0, 0, 0, 0.4);
 		z-index: 1;
-	}
+	} */
 
 	.hero-video {
 		position: absolute;
@@ -127,10 +230,76 @@ import ProductList from "../components/ProductList";
 		text-align: center;
 		margin-bottom: var(--spacing-xl);
 		font-size: 2.5rem;
+		font-family: var(--font-branding);
+		color: var(--color-primary);
 	}
 
 	.bg-light {
 		background-color: #f3f4f6;
+	}
+
+	.bg-light-soft {
+		background-color: #fafbfc;
+	}
+
+	/* Contact Form Styles */
+	.contact-info h3 {
+		font-size: 1.25rem;
+		color: var(--color-primary-dark);
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.contact-form {
+		background: white;
+		padding: var(--spacing-xl);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-md);
+	}
+
+	.form-group {
+		margin-bottom: var(--spacing-md);
+	}
+
+	.form-group label {
+		display: block;
+		margin-bottom: var(--spacing-xs);
+		font-weight: 500;
+		color: var(--color-secondary);
+	}
+
+	.form-group input,
+	.form-group textarea {
+		width: 100%;
+		padding: var(--spacing-sm);
+		border: 1px solid #e5e7eb;
+		border-radius: var(--radius-sm);
+		font-family: inherit;
+	}
+
+	.form-group input:focus,
+	.form-group textarea:focus {
+		outline: none;
+		border-color: var(--color-primary);
+	}
+
+	.btn-submit {
+		width: 100%;
+		background-color: var(--color-primary);
+		color: white;
+		padding: var(--spacing-md);
+		border: none;
+		border-radius: var(--radius-sm);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: background-color var(--transition-normal);
+	}
+
+	.btn-submit:hover {
+		background-color: var(--color-primary-dark);
+	}
+
+	.section {
 	}
 
 	/* Product card manual styles to match vanilla CSS requests inside React? 

@@ -25,6 +25,7 @@
   /* Typography */
   --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
   --font-serif: 'Playfair Display', serif;
+  --font-branding: 'Dancing Script', cursive;
   /* Optional for headings */
 
   /* Border Radius */
@@ -40,6 +41,7 @@
   /* Transitions */
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 
 /* Reset & Base */
 *,
@@ -95,5 +97,27 @@ button {
 }
 
 .section {
-  padding: var(--spacing-2xl) 0;
+  padding: var(--spacing-xl) 0;
+}
+
+/* Grid System */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(var(--spacing-sm) * -1);
+  margin-left: calc(var(--spacing-sm) * -1);
+}
+
+[class*="col-"] {
+  position: relative;
+  width: 100%;
+  padding-right: var(--spacing-sm);
+  padding-left: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
 }

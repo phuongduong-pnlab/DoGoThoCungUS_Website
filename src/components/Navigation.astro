@@ -1,10 +1,9 @@
 ---
 const links = [
-    { text: "Products", href: "/products" },
-    { text: "Hot Deals", href: "/deals" },
-    { text: "About", href: "/about" },
-    { text: "Locations", href: "/locations" },
-    { text: "Contact", href: "/contact" },
+    { text: "Sản Phẩm", href: "#products" },
+    { text: "Thông Tin", href: "#about" },
+    { text: "Yêu Thích", href: "#loved" },
+    { text: "Liên Hệ", href: "#contact" },
 ];
 ---
 
@@ -101,9 +100,9 @@ const links = [
     }
 
     .slogan {
-        font-family: var(--font-serif);
-        font-style: italic;
-        font-size: 0.9rem;
+        font-family: var(--font-branding);
+        font-size: 1.7rem;
+        font-weight: 900;
         color: var(--color-primary);
         border-left: 1px solid #ddd;
         padding-left: var(--spacing-md);
@@ -119,7 +118,8 @@ const links = [
 
     .desktop-nav a {
         font-weight: 500;
-        color: var(--color-secondary);
+        font-size: 1.4rem;
+        color: var(--color-primary);
         transition: color var(--transition-normal);
     }
 
@@ -153,6 +153,12 @@ const links = [
         transform: translateX(0);
     }
 
+    .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .mobile-nav ul {
         list-style: none;
         text-align: center;
@@ -163,9 +169,8 @@ const links = [
 
     .mobile-nav a {
         font-size: 1.5rem;
-        font-family: var(--font-serif);
         font-weight: 700;
-        color: var(--color-secondary);
+        color: var(--color-primary);
     }
 
     #close-menu-btn {

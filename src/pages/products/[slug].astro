@@ -2,10 +2,11 @@
 import Layout from "../../layouts/Layout.astro";
 import ProductDetail from "../../components/ProductDetail";
 import { getProducts } from "../../lib/server/googleSheets";
+import { toSlug } from "../../lib/utils";
 
-const { id } = Astro.params;
+const { slug } = Astro.params;
 const products = await getProducts();
-const product = products.find((p) => p.id === id);
+const product = products.find((p) => toSlug(p.name) === slug);
 
 if (!product) {
     return Astro.redirect("/404");
@@ -13,11 +14,11 @@ if (!product) {
 ---
 
 <Layout title={product.name} description={product.description}>
-    <div class="container section">
+    <div class="container section page-navigation">
         <div class="breadcrumbs">
             <a href="/">Home</a>
             <span>/</span>
-            <a href="/products">Products</a>
+            <a href="/#products">Products</a>
             <span>/</span>
             <span>{product.name}</span>
         </div>
@@ -27,8 +28,10 @@ if (!product) {
 </Layout>
 
 <style>
+    .page-navigation {
+        padding: var(--spacing-xs);
+    }
     .breadcrumbs {
-        margin-bottom: var(--spacing-lg);
         color: var(--color-text-muted);
         font-size: 0.875rem;
     }
