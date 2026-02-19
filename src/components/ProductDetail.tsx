@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/components/ProductDetail.css';
 import Toast from './ui/Toast';
+import OptimizedImage from './ui/OptimizedImage';
+import { cmToInches } from '../lib/utils';
 
 interface Product {
     id: string;
@@ -51,11 +53,12 @@ export default function ProductDetail({ product }: { product: Product }) {
             {/* Gallery */}
             <div className="gallery-section">
                 <div className="main-image-container group">
-                    {selectedImage ? (
-                        <img src={selectedImage} alt={product.name} className="main-image" />
-                    ) : (
-                        <div className="no-image-large">No Image</div>
-                    )}
+                    <OptimizedImage 
+                      src={selectedImage} 
+                      alt={product.name} 
+                      width={800}
+                      className="main-image-optimized"
+                    />
                 </div>
                 <div className="thumbnail-list">
                     {product.images.map((img, idx) => (
@@ -64,7 +67,12 @@ export default function ProductDetail({ product }: { product: Product }) {
                             onClick={() => setSelectedImage(img)}
                             className={`thumbnail-btn ${selectedImage === img ? 'active' : ''}`}
                         >
-                            <img src={img} alt={`View ${idx + 1}`} />
+                            <OptimizedImage 
+                              src={img} 
+                              alt={`View ${idx + 1}`} 
+                              width={100}
+                              className="thumbnail-img-optimized"
+                            />
                         </button>
                     ))}
                 </div>
@@ -79,21 +87,19 @@ export default function ProductDetail({ product }: { product: Product }) {
                     <p>{product.description}</p>
                 </div>
 
-                {/* Variants */}
+                {/* Variants (Sizes) */}
                 {product.variants && product.variants.length > 0 && (
                    <div className="variants-section">
-                       <h3>Available Options</h3>
-                       <div className="variant-options">
-                           {product.variants.map((v, idx) => (
-                               <button
-                                   key={idx}
-                                   onClick={() => handleSelectVariant(v)}
-                                   className={`variant-chip ${selectedVariant === v ? 'active' : ''}`}
-                               >
-                                   {v.size && <span>{v.size}</span>}
-                                   {v.color && <span> - {v.color}</span>}
-                               </button>
-                           ))}
+                       <h3>Available Sizes</h3>
+                       <div className="size-scroll-wrapper">
+                           <div className="size-options-container">
+                               {product.variants.map((v, idx) => (
+                                   <div key={idx} className="size-item-card">
+                                       <span className="size-label">{v.size}</span>
+                                       <span className="size-conversion">{cmToInches(v.size || '')}</span>
+                                   </div>
+                               ))}
+                           </div>
                        </div>
                    </div>
                 )}

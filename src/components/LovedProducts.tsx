@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/components/ProductList.css';
 import Toast from './ui/Toast';
+import OptimizedImage from './ui/OptimizedImage';
 import { toSlug } from '../lib/utils';
 
 interface Product {
@@ -26,10 +27,10 @@ export default function LovedProducts() {
 
     updateLovedIds();
 
-    fetch('/api/products')
+    fetch('/api/products?limit=100')
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
+        setProducts(data.products || []);
         setLoading(false);
       })
       .catch(err => {
@@ -76,15 +77,12 @@ export default function LovedProducts() {
           {filteredProducts.map(product => (
             <div key={product.id} className="product-card">
               <a href={`/products/${toSlug(product.name)}`} className="card-image-link">
-                {product.images[0] ? (
-                  <img 
-                    src={product.images[0]} 
-                    alt={product.name} 
-                    className="card-image"
-                  />
-                ) : (
-                  <div className="no-image">Sản phẩm chưa có ảnh</div>
-                )}
+                <OptimizedImage 
+                  src={product.images[0]} 
+                  alt={product.name} 
+                  width={400}
+                  className="card-image-container"
+                />
               </a>
 
               <div className="card-content">

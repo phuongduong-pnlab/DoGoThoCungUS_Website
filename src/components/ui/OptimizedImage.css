@@ -1,0 +1,58 @@
+.optimized-image-container {
+    position: relative;
+    overflow: hidden;
+    background-color: #f3f4f6;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.optimized-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.optimized-image.hidden {
+    opacity: 0;
+    position: absolute;
+}
+
+.optimized-image.visible {
+    opacity: 1;
+}
+
+.image-skeleton-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            #f3f3f3 25%,
+            #e5e7eb 50%,
+            #f3f3f3 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.no-image-placeholder,
+.image-error {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    text-align: center;
+    padding: 1rem;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

@@ -1,11 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ProductDetail from "../../components/ProductDetail";
-import { getProducts } from "../../lib/server/googleSheets";
+import { getPublicProducts } from "../../lib/server/supabase";
 import { toSlug } from "../../lib/utils";
 
 const { slug } = Astro.params;
-const products = await getProducts();
+const { products } = await getPublicProducts(1, 1000); // Fetch all for lookup
 const product = products.find((p) => toSlug(p.name) === slug);
 
 if (!product) {
