@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/components/ProductList.css';
 import Toast from './ui/Toast';
 import OptimizedImage from './ui/OptimizedImage';
-import { toSlug } from '../lib/utils';
+import { toSlug, formatSizeInches } from '../lib/utils';
 
 interface Product {
   id: string;
@@ -76,20 +76,35 @@ export default function LovedProducts() {
         <div className="product-grid">
           {filteredProducts.map(product => (
             <div key={product.id} className="product-card">
-              <a href={`/products/${toSlug(product.name)}`} className="card-image-link">
+              <div className="card-image-wrapper">
                 <OptimizedImage 
                   src={product.images[0]} 
                   alt={product.name} 
                   width={400}
                   className="card-image-container"
                 />
-              </a>
+              </div>
 
               <div className="card-content">
                 <div className="card-header">
-                  <h3 className="card-title">
-                    <a href={`/products/${toSlug(product.name)}`}>{product.name}</a>
-                  </h3>
+                  <h3 className="card-title">{product.name}</h3>
+                </div>
+                
+                <div className="card-variants">
+                  {product.variants && product.variants.length > 0 && (
+                    <>
+                      <div className="variant-info-row" style={{ fontSize: '0.75rem' ,color: 'white'}}>Kích thước: Ngang x Hông x Cao</div>
+                      <div className="variant-badges">
+                        {product.variants.slice(0, 10).map((v: any, idx: number) => (
+                          <span key={idx} className="variant-badge">
+                            <span className="badge-row-cm" style={{borderBottom: '1px solid #444'}}>{v.size}cm</span>
+                            <span className="badge-row-in" >{formatSizeInches(v.size || '')}in</span>
+                          </span>
+                        ))}
+                        {product.variants.length > 10 && <span className="variant-badge">+{product.variants.length - 10}</span>}
+                      </div>
+                    </>
+                  )}
                 </div>
                 
                 <button 

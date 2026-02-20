@@ -153,7 +153,7 @@
     box-shadow: var(--shadow-lg);
 }
 
-.card-image-link {
+.card-image-wrapper {
     display: block;
     height: 300px;
     overflow: hidden;
@@ -203,11 +203,6 @@
     font-weight: 500;
     line-height: 1.4;
     margin-right: var(--spacing-xs);
-}
-
-.card-title a {
-    text-decoration: none;
-    color: inherit;
 }
 
 .card-price {

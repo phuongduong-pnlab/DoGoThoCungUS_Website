@@ -210,19 +210,19 @@ export default function ProductList() {
               className="product-card"
               ref={isLast ? lastProductElementRef : null}
             >
-              <a href={`/products/${toSlug(product.name)}`} className="card-image-link">
-                 <OptimizedImage 
-                   src={product.images[0]} 
-                   alt={product.name} 
-                   width={400}
-                   className="card-image-container"
-                 />
-              </a>
+                <div className="card-image-wrapper">
+                  <OptimizedImage 
+                    src={product.images[0]} 
+                    alt={product.name} 
+                    width={400}
+                    className="card-image-container"
+                  />
+                </div>
 
               <div className="card-content">
                 <div className="card-header">
                    <h3 className="card-title">
-                     <a href={`/products/${toSlug(product.name)}`}>{product.name}</a>
+                     {product.name}
                    </h3>
                 </div>
                 

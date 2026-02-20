@@ -19,7 +19,13 @@ const links = [
                 {
                     links.map((link) => (
                         <li>
-                            <a href={link.href}>{link.text}</a>
+                            <a
+                                href={link.href}
+                                class="nav-link"
+                                data-scroll-link
+                            >
+                                {link.text}
+                            </a>
                         </li>
                     ))
                 }
@@ -50,7 +56,9 @@ const links = [
                 {
                     links.map((link) => (
                         <li>
-                            <a href={link.href}>{link.text}</a>
+                            <a href={link.href} class="nav-link">
+                                {link.text}
+                            </a>
                         </li>
                     ))
                 }
@@ -146,11 +154,15 @@ const links = [
         justify-content: center;
         align-items: center;
         transform: translateX(100%);
-        transition: transform var(--transition-normal);
+        visibility: hidden;
+        transition:
+            transform var(--transition-normal),
+            visibility var(--transition-normal);
     }
 
     #mobile-menu-overlay.open {
         transform: translateX(0);
+        visibility: visible;
     }
 
     .mobile-nav {
@@ -198,6 +210,7 @@ const links = [
     const menuBtn = document.getElementById("mobile-menu-btn");
     const closeBtn = document.getElementById("close-menu-btn");
     const overlay = document.getElementById("mobile-menu-overlay");
+    const navLinks = document.querySelectorAll(".nav-link");
 
     menuBtn?.addEventListener("click", () => {
         overlay?.classList.add("open");
@@ -211,17 +224,14 @@ const links = [
 
     closeBtn?.addEventListener("click", closeMenu);
 
-    // Close when clicking a link
-    overlay?.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", closeMenu);
-    });
-
     // Scroll Logic
     let lastScrollY = window.scrollY;
     const header = document.getElementById("main-header");
 
     window.addEventListener("scroll", () => {
         if (!header) return;
+        // Don't hide header if mobile menu is open
+        if (overlay?.classList.contains("open")) return;
 
         if (window.scrollY > lastScrollY && window.scrollY > 100) {
             header.classList.add("hidden");
@@ -229,5 +239,15 @@ const links = [
             header.classList.remove("hidden");
         }
         lastScrollY = window.scrollY;
+    });
+
+    // Close when clicking a link
+    navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            closeMenu();
+            setTimeout(() => {
+                header?.classList.remove("hidden");
+            });
+        });
     });
 </script>

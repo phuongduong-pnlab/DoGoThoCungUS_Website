@@ -97,7 +97,7 @@ button {
 }
 
 .section {
-  padding: var(--spacing-xl) 0;
+  padding: calc(var(--spacing-xl) + 80px) 0;
 }
 
 /* Grid System */

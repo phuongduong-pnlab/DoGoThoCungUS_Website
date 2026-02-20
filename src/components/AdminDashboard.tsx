@@ -203,8 +203,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // Init DB State
-  const [initStatus, setInitStatus] = useState('');
+  // authLoading
 
   // Check Keep-Alive
   useEffect(() => {
@@ -255,20 +254,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const initDatabase = async () => {
-      if(!confirm("This will create specific tabs in your Google Sheet if they don't exist. Continue?")) return;
-      setInitStatus('Initializing...');
-      try {
-          const res = await fetch('/api/admin/init-db', { method: 'POST' });
-          const data = await res.json();
-          if(data.success) alert("Success: " + data.message);
-          else alert("Error: " + data.message);
-      } catch (e) {
-          alert("Failed to connect to init-db endpoint");
-      } finally {
-          setInitStatus('');
-      }
-  };
+
 
   useEffect(() => {
     const lower = search.toLowerCase();
@@ -342,24 +328,9 @@ export default function AdminDashboard() {
                 <div className="settings-panel">
                     <h2>System Settings</h2>
                     <div className="setting-card">
-                        <h3>Google Sheets Database</h3>
-                        <p>Ensure your connected sheet has the correct structure (Tabs for Orders, Customers, Products, etc).</p>
-                        <div style={{display:'flex', gap:'10px'}}>
-                             <button className="primary-btn" onClick={initDatabase} disabled={!!initStatus}>
-                                {initStatus || "Initialize Database Structure"}
-                            </button>
-                             <button className="primary-btn" style={{background:'#f59e0b'}} onClick={async () => {
-                                 if(!confirm("Attempt to migrate data from 'Products' (old) to 'PROD_VAR' (new)?")) return;
-                                 try {
-                                     const res = await fetch('/api/admin/migrate', {method:'POST'});
-                                     const d = await res.json();
-                                     alert(d.message);
-                                 } catch(e) { alert("Migration failed"); }
-                             }}>
-                                Migrate Old Data
-                            </button>
-                        </div>
-                        <p className="hint">1. Initialize First. 2. Migrate if you have existing data in the 'Products' tab.</p>
+                        <h3>Database Status</h3>
+                        <p>The system is currently using Supabase as the primary database.</p>
+                        <div className="status-badge success">Connected</div>
                     </div>
                 </div>
             )}
