@@ -127,6 +127,58 @@ export const getPublicProducts = async (page = 1, limit = 12, search = '', categ
     };
 };
 
+export const getPublicProductBySku = async (sku: string) => {
+    // 1. Fetch the seed product
+    const { data: seedProduct, error: seedError } = await supabaseAdmin
+        .from('products')
+        .select('*')
+        .eq('sku', sku)
+        .single();
+
+    if (seedError || !seedProduct) return null;
+
+    // 2. Fetch all variants (same name, material, color)
+    let query = supabaseAdmin
+        .from('products')
+        .select('*')
+        .eq('name', seedProduct.name);
+
+    if (seedProduct.material) query = query.eq('material', seedProduct.material);
+    else query = query.is('material', null);
+
+    if (seedProduct.color) query = query.eq('color', seedProduct.color);
+    else query = query.is('color', null);
+
+    const { data: variants, error: variantsError } = await query;
+    if (variantsError || !variants) return null;
+
+    // 3. Group them into the standard UI format
+    let displayName = seedProduct.name;
+    if (seedProduct.material) displayName += ", Gỗ " + seedProduct.material;
+    if (seedProduct.color) displayName += ", Màu " + seedProduct.color;
+
+    return {
+        id: seedProduct.sku, // Link identifier
+        name: displayName,
+        baseName: seedProduct.name,
+        category: seedProduct.category,
+        price: seedProduct.price,
+        material: seedProduct.material,
+        color: seedProduct.color,
+        description: seedProduct.description,
+        images: seedProduct.images || [],
+        variants: variants.map(v => ({
+            id: v.sku,
+            size: v.size,
+            color: v.color,
+            material: v.material,
+            price: v.price,
+            stock: v.stock,
+            images: v.images
+        }))
+    };
+};
+
 export const addRow = async (tableName: string, row: any) => {
     const { data, error } = await supabaseAdmin.from(tableName.toLowerCase()).insert([row]).select();
     if (error) throw new Error(error.message);

@@ -56,24 +56,55 @@
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
     overflow: hidden;
+    width: 100%;
+    /* Unlimited width */
 }
 
 .sidebar {
     width: 250px;
+    min-width: 250px;
     background: #f8fafc;
-    /* Slate-50 */
     border-right: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-dashboard-layout.collapsed .sidebar {
+    width: 70px;
+    min-width: 70px;
+    padding: 1.5rem 0.75rem;
 }
 
 .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary);
     margin-bottom: 2rem;
     font-family: var(--font-branding);
+    min-height: 30px;
+}
+
+.admin-dashboard-layout.collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.sidebar-toggle {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--color-text-muted);
 }
 
 .sidebar nav {
@@ -93,6 +124,22 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.admin-dashboard-layout.collapsed .sidebar nav button {
+    padding: 0.75rem;
+    justify-content: center;
+}
+
+.nav-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
 }
 
 .sidebar nav button:hover {
@@ -115,10 +162,59 @@
     background: #fee2e2;
     color: #b91c1c;
     border: none;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     border-radius: var(--radius-sm);
     margin-top: auto;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.admin-dashboard-layout.collapsed .logout-btn {
+    padding: 0.75rem;
+    justify-content: center;
+}
+
+/* --- Actions Column Position Adjustments --- */
+.actions-cell {
+    width: 45px !important;
+    min-width: 45px !important;
+    white-space: nowrap;
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    padding: 1rem 0.25rem !important;
+}
+
+.admin-table th:first-child {
+    position: sticky;
+    left: 0;
+    background: #f9fafb;
+    z-index: 3;
+    width: 45px !important;
+    min-width: 45px !important;
+    padding: 1rem 0.25rem !important;
+    text-align: center !important;
+}
+
+.action-btn {
+    margin: 0 2px !important;
+    font-size: 1.1rem !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.action-btn:hover {
+    background: #f1f5f9;
 }
 
 .main-content {
@@ -146,11 +242,53 @@
     gap: 1rem;
 }
 
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .admin-search {
-    padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    /* Extra padding on right for X */
+    border: 1px solid #e2e8f0;
     border-radius: var(--radius-sm);
-    width: 250px;
+    width: 200px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+}
+
+.admin-search:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.search-clear:hover {
+    background: #f1f5f9;
+    color: var(--color-text);
+}
+
+.admin-container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    background: white;
 }
 
 .actions button {
@@ -254,22 +392,6 @@
     color: var(--color-text-muted);
 }
 
-/* --- CRUD Actions & Modals --- */
-.action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-    padding: 0.2rem;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.action-btn:hover {
-    background: #f1f5f9;
-}
-
 .text-red-600 {
     color: #dc2626;
 }
@@ -324,11 +446,13 @@
     color: var(--color-text);
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
     padding: 0.75rem;
     border: 1px solid #e2e8f0;
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
+    background-color: white;
 }
 
 .modal-actions {
@@ -357,4 +481,181 @@
 
 .save-btn:hover {
     background: var(--color-primary-dark);
+}
+
+/* --- Overflow & Cell Styling --- */
+.table-cell {
+    min-width: 100px;
+    max-width: 500px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.cell-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Allow up to 2 lines for readability instead of strict single line ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.table-cell .cell-content {
+    /* Padding to account for potential resize-handle interference */
+    padding-right: 4px;
+}
+
+/* --- Pagination UI --- */
+.table-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.page-btn {
+    padding: 0.4rem 0.8rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- Advanced Table Features --- */
+.admin-table {
+    table-layout: fixed;
+}
+
+.sortable-header {
+    position: relative;
+    cursor: default;
+    user-select: none;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sort-icon {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    transition: color 0.2s;
+}
+
+.sort-icon.active {
+    color: var(--color-primary);
+}
+
+.resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    cursor: col-resize;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+    background: var(--color-primary);
+    width: 2px;
+}
+
+/* --- Admin Utility Features --- */
+.sheet-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.refresh-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.refresh-btn:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.refresh-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.spinning {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.external-link-icon {
+    display: inline-flex;
+    margin-left: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.external-link-icon:hover {
+    opacity: 1;
+    transform: scale(1.2);
 }

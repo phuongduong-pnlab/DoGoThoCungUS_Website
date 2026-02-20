@@ -1,0 +1,47 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductDetail from "../../components/ProductDetail";
+import { getPublicProductBySku } from "../../lib/server/supabase";
+
+const { sku } = Astro.params;
+
+if (!sku) {
+    return Astro.redirect("/404");
+}
+
+const product = await getPublicProductBySku(sku);
+
+if (!product) {
+    return Astro.redirect("/404");
+}
+---
+
+<Layout title={product.name} description={product.description}>
+    <div class="container section page-navigation">
+        <div class="breadcrumbs">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="/#products">Products</a>
+            <span>/</span>
+            <span>{product.name}</span>
+        </div>
+
+        <ProductDetail product={product} client:load />
+    </div>
+</Layout>
+
+<style>
+    .page-navigation {
+        padding: var(--spacing-xs);
+    }
+    .breadcrumbs {
+        color: var(--color-text-muted);
+        font-size: 0.875rem;
+    }
+    .breadcrumbs a:hover {
+        color: var(--color-primary);
+    }
+    .breadcrumbs span {
+        margin: 0 var(--spacing-xs);
+    }
+</style>
