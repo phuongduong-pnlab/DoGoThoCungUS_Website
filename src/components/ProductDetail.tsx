@@ -96,15 +96,12 @@ export default function ProductDetail({ product }: { product: Product }) {
     // Pre-fill contact message when modal opens
     React.useEffect(() => {
         if (showContactModal) {
-            const variantStr = selectedVariant 
-                ? ` (${selectedVariant.size || ''} ${selectedVariant.color || ''})`.trim() 
-                : '';
             setContactForm(prev => ({
                 ...prev,
-                message: `Xin chào, tôi quan tâm đến sản phẩm "${product.name}${variantStr}". Vui lòng tư vấn thêm cho tôi về cách đặt hàng.`
+                message: `Xin chào, tôi quan tâm đến sản phẩm "${product.name}". Vui lòng tư vấn thêm cho tôi về cách đặt hàng.`
             }));
         }
-    }, [showContactModal, product.name, selectedVariant]);
+    }, [showContactModal, product.name]);
 
     return (
         <div className="product-detail-grid">
