@@ -71,18 +71,18 @@ const messageValue = Astro.url.searchParams.get("message") || "";
 		</div>
 	</section>
 
+	<!-- Customer Map Section -->
+	<section id="customer-map" class="section">
+		<div class="container">
+			<CustomerMap client:only="react" />
+		</div>
+	</section>
+
 	<!-- Loved Products Section -->
 	<section id="loved" class="section bg-light-soft">
 		<div class="container">
 			<h2 class="section-title">Sản Phẩm Đang Quan Tâm</h2>
 			<LovedProducts client:load />
-		</div>
-	</section>
-
-	<!-- Customer Map Section -->
-	<section id="customer-map" class="section">
-		<div class="container">
-			<CustomerMap client:only="react" />
 		</div>
 	</section>
 

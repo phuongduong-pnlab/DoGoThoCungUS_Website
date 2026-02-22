@@ -1,25 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-
-// Fix for default Leaflet markers not showing in some bundlers
-// We'll use a custom icon or ensure the default one loads
-// A simple way is to point to the CDN for standard markers if local assets fail, 
-// or import them directly. For simplicity and reliability, we'll use an SVG icon logic custom
-// or just re-assign the prototypes.
-// 
-// Actually, let's use a custom DivIcon or standard icon with fixed URLs.
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 interface Customer {
   id: number;
@@ -32,15 +12,41 @@ interface Customer {
 export default function CustomerMap() {
   const [mounted, setMounted] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [MapComponents, setMapComponents] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
     
+    // Dynamically import Leaflet and React-Leaflet only on the client
+    // This circumvents Vite/Astro SSR and prebundling crashes associated with Leaflet's window dependency
+    Promise.all([
+      import('react-leaflet'),
+      import('leaflet')
+    ]).then(([ReactLeaflet, Leaflet]) => {
+      const L = Leaflet.default || Leaflet;
+      const DefaultIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+
+      setMapComponents({
+        MapContainer: ReactLeaflet.MapContainer,
+        TileLayer: ReactLeaflet.TileLayer,
+        Marker: ReactLeaflet.Marker,
+        Popup: ReactLeaflet.Popup,
+        DefaultIcon
+      });
+    }).catch(err => console.error("Error dynamically loading Leaflet:", err));
+
     // Fetch and parse CSV data
     fetch('/data/customers.csv')
       .then(response => response.text())
       .then(csvText => {
-        const lines = csvText.trim().split('\n');
+        const lines = csvText.replace(/\r/g, '').trim().split('\n');
         const headers = lines[0].split(',').map(h => h.trim());
         
         const parsedData = lines.slice(1).map(line => {
@@ -49,7 +55,6 @@ export default function CustomerMap() {
           
           headers.forEach((header, index) => {
             const value = values[index];
-            // Convert numbers
             if (header === 'id' || header === 'lat' || header === 'lng') {
               entry[header] = parseFloat(value);
             } else {
@@ -57,15 +62,28 @@ export default function CustomerMap() {
             }
           });
           
-          return entry as Customer;
-        });
+          return entry;
+        }).filter(customer => !isNaN(customer.lat) && !isNaN(customer.lng));
         
-        setCustomers(parsedData);
+        setCustomers(parsedData as Customer[]);
       })
       .catch(err => console.error("Error loading customer data:", err));
   }, []);
 
-  if (!mounted) return <div className="map-placeholder" style={{height: '500px', background: '#e5e7eb'}}>Loading Map...</div>;
+  if (!mounted || !MapComponents) {
+    return (
+      <div className="customer-map-wrapper"> 
+        <div className="map-header">
+          <h2 className="section-title" style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-branding)', fontSize: '2.5rem' }}>Nơi Đồ Gỗ Thờ Cúng US đã được phục vụ</h2>
+        </div>
+        <div className="map-placeholder" style={{height: '500px', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '12px'}}>
+          Loading Map...
+        </div>
+      </div>
+    );
+  }
+
+  const { MapContainer, TileLayer, Marker, Popup, DefaultIcon } = MapComponents;
 
   return (
     <div className="customer-map-wrapper"> 
@@ -80,7 +98,7 @@ export default function CustomerMap() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {customers.map((customer) => (
-            <Marker key={customer.id} position={[customer.lat, customer.lng]}>
+            <Marker key={customer.id} position={[customer.lat, customer.lng]} icon={DefaultIcon}>
               <Popup>
                 <strong>{customer.city}</strong> <br /> {customer.state}
               </Popup>
@@ -111,7 +129,6 @@ export default function CustomerMap() {
           text-align: center;
         }
         
-        /* Custom Marker style can go here if we used DivIcon */
         .leaflet-control-attribution.leaflet-control {
           display: none;
         }
