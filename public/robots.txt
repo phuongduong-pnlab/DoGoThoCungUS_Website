@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Ensure this matches the site URL in astro.config.mjs
+Sitemap: https://dogothocung.us/sitemap-index.xml

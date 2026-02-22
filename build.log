@@ -1,0 +1,35 @@
+
+> diepmai6dogothocungus-website-prod@0.0.1 build
+> astro build
+
+[33m[1m08:53:47[22m [WARN] [router][39m The route "/product/[sku]" is defined in both "src/pages/product/[sku].astro" and "src/pages/product/[slug].astro" using SSR mode. A dynamic SSR route cannot be defined more than once.
+[33m[1m08:53:47[22m [WARN] [router][39m A collision will result in an hard error in following versions of Astro.
+[2m08:53:47[22m [34m[content][39m Syncing content
+[2m08:53:47[22m [34m[content][39m Synced content
+[2m08:53:47[22m [34m[types][39m Generated [2m118ms[22m
+[2m08:53:47[22m [34m[build][39m output: [34m"server"[39m
+[2m08:53:47[22m [34m[build][39m mode: [34m"server"[39m
+[2m08:53:47[22m [34m[build][39m directory: [34mD:\Business\PN Lab\Code\DiepMai6DoGoThoCungUS_Website_PROD\dist\[39m
+[2m08:53:47[22m [34m[build][39m adapter: [32m@astrojs/vercel[39m
+[2m08:53:47[22m [34m[build][39m Collecting build info...
+[2m08:53:47[22m [34m[build][39m [32mΓ£ô Completed in 194ms.[39m
+[2m08:53:47[22m [34m[build][39m Building server entrypoints...
+08:53:49 [ERROR] [vite] Γ£ù Build failed in 1.95s
+src/pages/product/[sku].astro (4:9): "getPublicProductBySku" is not exported by "src/lib/server/supabase.ts", imported by "src/pages/product/[sku].astro".
+file: D:/Business/PN Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/src/pages/product/[sku].astro:4:9
+
+2: import Layout from "../../layouts/Layout.astro";
+3: import ProductDetail from "../../components/ProductDetail";
+4: import { getPublicProductBySku } from "../../lib/server/supabase";
+            ^
+5: 
+6: const { sku } = Astro.params;
+
+  Location:
+    D:/Business/PN Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/src/pages/product/[sku].astro:4:9
+  Stack trace:
+    at getRollupError (file:///D:/Business/PN%20Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at Module.error (file:///D:/Business/PN%20Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at ModuleScope.findVariable (file:///D:/Business/PN%20Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionBodyScope.findVariable (file:///D:/Business/PN%20Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at CallExpression.bind (file:///D:/Business/PN%20Lab/Code/DiepMai6DoGoThoCungUS_Website_PROD/node_modules/rollup/dist/es/shared/node-entry.js:2829:23)

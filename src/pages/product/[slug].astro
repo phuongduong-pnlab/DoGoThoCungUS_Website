@@ -1,15 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ProductDetail from "../../components/ProductDetail";
-import { getPublicProductBySku } from "../../lib/server/supabase";
+import { getPublicProductBySlug } from "../../lib/server/supabase";
 
-const { sku } = Astro.params;
+const { slug } = Astro.params;
 
-if (!sku) {
+if (!slug) {
     return Astro.redirect("/404");
 }
 
-const product = await getPublicProductBySku(sku);
+const product = await getPublicProductBySlug(slug);
 
 if (!product) {
     return Astro.redirect("/404");

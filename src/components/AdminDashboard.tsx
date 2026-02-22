@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/components/Admin.css';
+import { generateProductSlug, formatSizeInches } from '../lib/utils';
 
 // --- Generic Table Component ---
 const GenericTable = ({ sheetName }: { sheetName: string }) => {
@@ -260,7 +261,7 @@ const GenericTable = ({ sheetName }: { sheetName: string }) => {
                                                  {Array.isArray(row[h]) ? `[${row[h].length} items]` : (row[h] || '').toString()}
                                                  {sheetName === 'products' && h === 'name' && row.sku && (
                                                      <a 
-                                                        href={`/product/${row.sku}`} 
+                                                        href={`/product/${generateProductSlug(row.name, row.sku)}`} 
                                                         target="_blank" 
                                                         rel="noopener noreferrer"
                                                         className="external-link-icon"
@@ -361,6 +362,272 @@ const GenericTable = ({ sheetName }: { sheetName: string }) => {
     );
 };
 
+const ImageWithSkeleton = ({ src, alt }: { src: string, alt: string }) => {
+    const [loaded, setLoaded] = useState(false);
+    return (
+        <div style={{width: '50px', height: '50px', backgroundColor: '#e2e8f0', borderRadius: '4px', position: 'relative', overflow: 'hidden'}}>
+            <img 
+                src={src} 
+                alt={alt} 
+                onLoad={() => setLoaded(true)} 
+                style={{
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'cover', 
+                    opacity: loaded ? 1 : 0, 
+                    transition: 'opacity 0.3s ease-in-out',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                }} 
+            />
+            {!loaded && (
+                <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
+                    background: 'linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 1.5s infinite linear'
+                }}></div>
+            )}
+            <style>{`
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+            `}</style>
+        </div>
+    );
+};
+
+const ProductReviewTable = () => {
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    
+    // Modal state for clipboard ad copy
+    const [showAdModal, setShowAdModal] = useState(false);
+    const [adCopy1, setAdCopy1] = useState('');
+    const [adCopy2, setAdCopy2] = useState('');
+    const [adModalProduct, setAdModalProduct] = useState<any>(null);
+
+    useEffect(() => {
+        setLoading(true);
+        fetch('/api/admin/data?sheet=products')
+            .then(res => res.json())
+            .then(data => {
+                setProducts(Array.isArray(data) ? data : []);
+            })
+            .catch(err => console.error(err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const filteredData = products.filter(row => 
+        Object.values(row).some(cell => (cell || '').toString().toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const currentPageData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
+    const openAdModal = (product: any) => {
+        // Generate Ad Copy
+        const sizeCm = product.size ? `${product.size}cm` : '';
+        const sizeIn = product.size ? `${formatSizeInches(product.size)}in` : '';
+        const sizeStr = sizeCm || sizeIn ? `Kích thước (Ngang x Hông x Cao): ${sizeCm} - ${sizeIn}` : '';
+        const materialStr = product.material ? `Chất liệu: Gỗ ${product.material}` : '';
+        const colorStr = product.color ? `Màu sắc: ${product.color}` : '';
+        
+        let baseText = `🔥 ${product.name} 🔥\n\n`;
+        if (materialStr) baseText += `✨ ${materialStr}\n`;
+        if (colorStr) baseText += `✨ ${colorStr}\n`;
+        if (sizeStr) baseText += `📏 ${sizeStr}\n`;
+
+        let text1 = baseText;
+        if (product.description) {
+            // Strip HTML tags if there are any
+            const plainDescription = product.description.replace(/<[^>]+>/g, '');
+            text1 += `\n${plainDescription}\n`;
+        }
+
+        let text2 = baseText;
+        if (product.price) {
+            text2 += `\n💵 Giá: $${product.price}\n`;
+        }
+        
+        setAdCopy1(text1);
+        setAdCopy2(text2);
+        setAdModalProduct(product);
+        setShowAdModal(true);
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Copied to clipboard!");
+            setShowAdModal(false);
+        });
+    }
+
+    return (
+        <div className="generic-sheet-view">
+             <div className="sheet-header">
+                <div className="sheet-title">
+                    <h3>Products (Review)</h3>
+                </div>
+                <div style={{display:'flex', gap:'10px'}}>
+                    <div className="search-wrapper">
+                         <input 
+                             placeholder="Search..." 
+                             value={searchTerm}
+                             onChange={e => setSearchTerm(e.target.value)}
+                             className="admin-search"
+                         />
+                    </div>
+                </div>
+             </div>
+             
+             {loading ? <div className="loading">Loading products...</div> : (
+                  <div className="table-container">
+                      <table className="admin-table">
+                         <thead>
+                             <tr>
+                                 <th>Action</th>
+                                 <th>Image</th>
+                                 <th>Name</th>
+                                 <th>Material</th>
+                                 <th>Color</th>
+                                 <th>Size (Cm - In)</th>
+                                 <th>Price</th>
+                                 <th>Shipping EST</th>
+                                 <th>Note</th>
+                                 <th>Profit</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             {currentPageData.map((row, i) => {
+                                 const price = parseFloat(row.price) || 0;
+                                 const costAvg = parseFloat(row.cost_avg) || 0;
+                                 const shippingEst = parseFloat(row.shipping_estimate) || 0;
+                                 // Profit ((Price-Cost AVG - Shipping EST - Price*0.075)*0.8)
+                                 const profit = ((price - costAvg - shippingEst - (price * 0.075)) * 0.8).toFixed(2);
+                                 
+                                 const sizeCmStr = row.size ? `${row.size}cm` : '';
+                                 const sizeInStr = row.size ? `${formatSizeInches(row.size)}in` : '';
+
+                                 return (
+                                     <tr key={i}>
+                                         <td className="actions-cell text-center" style={{textAlign: 'center'}}>
+                                             <button className="action-btn" onClick={() => openAdModal(row)} title="Copy Ad Script" style={{fontSize: '1.2rem'}}>📋</button>
+                                         </td>
+                                         <td className="table-cell">
+                                            {row.images && row.images[0] ? (
+                                                <ImageWithSkeleton src={row.images[0]} alt="thumb" />
+                                            ) : 'No image'}
+                                         </td>
+                                         <td className="table-cell">
+                                             {row.name} 
+                                             {row.sku && (
+                                                <a 
+                                                    href={`/product/${generateProductSlug(row.name, row.sku)}`} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    style={{ marginLeft: '6px', textDecoration: 'none' }}
+                                                    title="View Product Page"
+                                                >
+                                                    🔗
+                                                </a>
+                                             )}
+                                         </td>
+                                         <td className="table-cell">{row.material}</td>
+                                         <td className="table-cell">{row.color}</td>
+                                         <td className="table-cell">
+                                            {sizeCmStr} {sizeCmStr && sizeInStr && '-'} {sizeInStr}
+                                         </td>
+                                         <td className="table-cell">${price}</td>
+                                         <td className="table-cell">${shippingEst}</td>
+                                         <td className="table-cell">{row.note}</td>
+                                         <td className="table-cell" style={{fontWeight: 'bold', color: profit >= '0' ? 'green' : 'red'}}>${profit}</td>
+                                     </tr>
+                                 )
+                             })}
+                             {filteredData.length === 0 && (
+                                 <tr><td colSpan={10} style={{textAlign:'center', padding:'20px'}}>No products found.</td></tr>
+                             )}
+                         </tbody>
+                     </table>
+                  </div>
+             )}
+             
+             {!loading && filteredData.length > 0 && (
+                 <div className="table-footer">
+                     <div className="pagination">
+                         <button 
+                             disabled={currentPage === 1} 
+                             onClick={() => setCurrentPage(p => p - 1)}
+                             className="page-btn"
+                         >Prev</button>
+                         <span className="page-info">Page {currentPage} of {totalPages || 1} ({filteredData.length} records)</span>
+                         <button 
+                             disabled={currentPage >= totalPages} 
+                             onClick={() => setCurrentPage(p => p + 1)}
+                             className="page-btn"
+                         >Next</button>
+                     </div>
+                 </div>
+             )}
+
+             {showAdModal && (
+                 <div className="modal-overlay" style={{alignItems: 'flex-start', overflowY: 'auto', padding: '40px 0'}}>
+                     <div className="modal-content" style={{maxWidth: '1000px', width: '90%', margin: 'auto'}}>
+                         <h2 style={{marginBottom: '20px'}}>Ad Copy Preview</h2>
+                         <div style={{display: 'flex', gap: '30px'}}>
+                             <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                                 {adModalProduct?.images?.[0] && (
+                                     <img 
+                                        src={adModalProduct.images[0]} 
+                                        alt="Product" 
+                                        style={{width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', backgroundColor: '#fff', border: '1px solid #ccc', borderBottom: 'none', borderRadius: '8px 8px 0 0'}} 
+                                     />
+                                 )}
+                                 <textarea 
+                                    value={adCopy1}
+                                    onChange={(e) => setAdCopy1(e.target.value)}
+                                    rows={Math.max(15, adCopy1.split('\n').length + 5)}
+                                    style={{width: '100%', height: 'auto', padding: '15px', fontFamily: 'inherit', border: '1px solid #ccc', borderRadius: adModalProduct?.images?.[0] ? '0 0 8px 8px' : '8px', lineHeight: '1.5', resize: 'vertical'}}
+                                 />
+                                 <button type="button" onClick={() => copyToClipboard(adCopy1)} className="save-btn" style={{backgroundColor: 'var(--color-primary)', color: 'white', width: '100%', marginTop: '15px'}}>Copy Text</button>
+                             </div>
+                             <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                                 {adModalProduct?.images?.[0] && (
+                                     <img 
+                                        src={adModalProduct.images[0]} 
+                                        alt="Product" 
+                                        style={{width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', backgroundColor: '#fff', border: '1px solid #ccc', borderBottom: 'none', borderRadius: '8px 8px 0 0'}} 
+                                     />
+                                 )}
+                                 <textarea 
+                                    value={adCopy2}
+                                    onChange={(e) => setAdCopy2(e.target.value)}
+                                    rows={Math.max(15, adCopy2.split('\n').length + 5)}
+                                    style={{width: '100%', height: 'auto', padding: '15px', fontFamily: 'inherit', border: '1px solid #ccc', borderRadius: adModalProduct?.images?.[0] ? '0 0 8px 8px' : '8px', lineHeight: '1.5', resize: 'vertical'}}
+                                 />
+                                 <button type="button" onClick={() => copyToClipboard(adCopy2)} className="save-btn" style={{backgroundColor: 'var(--color-primary)', color: 'white', width: '100%', marginTop: '15px'}}>Copy Text</button>
+                             </div>
+                         </div>
+                         <div className="modal-actions" style={{marginTop: '20px'}}>
+                             <button type="button" onClick={() => setShowAdModal(false)} className="cancel-btn">Close</button>
+                         </div>
+                     </div>
+                 </div>
+             )}
+        </div>
+    );
+};
+
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -440,6 +707,13 @@ export default function AdminDashboard() {
                 </button>
                 
                 <div className="divider"></div>
+                {!sidebarCollapsed && <div className="nav-label">Marketing</div>}
+                <button className={activeTab === 'PRODUCT_REVIEW' ? 'active' : ''} onClick={() => setActiveTab('PRODUCT_REVIEW')} title="Product Review">
+                    <span className="nav-icon">⭐</span>
+                    {!sidebarCollapsed && <span>Products (Review)</span>}
+                </button>
+
+                <div className="divider"></div>
                 {!sidebarCollapsed && <div className="nav-label">Finance & Ops</div>}
                 
                 <button className={activeTab === 'BUSINESS' ? 'active' : ''} onClick={() => setActiveTab('BUSINESS')} title="Business">
@@ -481,6 +755,7 @@ export default function AdminDashboard() {
 
         <div className="main-content">
             {activeTab === 'PRODUCTS' && <GenericTable sheetName="products" />}
+            {activeTab === 'PRODUCT_REVIEW' && <ProductReviewTable />}
 
             {activeTab === 'ORDERS' && <GenericTable sheetName="orders" />}
             {activeTab === 'CUSTOMERS' && <GenericTable sheetName="customers" />}

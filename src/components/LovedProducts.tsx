@@ -9,6 +9,7 @@ interface Product {
   name: string;
   category: string;
   price: string | number;
+  slug?: string;
   images: string[];
   variants: any[];
 }
@@ -76,21 +77,24 @@ export default function LovedProducts() {
         <div className="product-grid">
           {filteredProducts.map(product => (
             <div key={product.id} className="product-card">
-              <div className="card-image-wrapper">
-                <OptimizedImage 
-                  src={product.images[0]} 
-                  alt={product.name} 
-                  width={400}
-                  className="card-image-container"
-                />
-              </div>
+              <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                <div className="card-image-wrapper">
+                  <OptimizedImage 
+                    src={product.images[0]} 
+                    alt={product.name} 
+                    width={400}
+                    className="card-image-container"
+                  />
+                </div>
+              </a>
 
               <div className="card-content">
-                <div className="card-header">
-                  <h3 className="card-title">{product.name}</h3>
-                </div>
-                
-                <div className="card-variants">
+                <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                  <div className="card-header">
+                    <h3 className="card-title">{product.name}</h3>
+                  </div>
+                  
+                  <div className="card-variants">
                   {product.variants && product.variants.length > 0 && (
                     <>
                       <div className="variant-info-row" style={{ fontSize: '0.75rem' ,color: 'white'}}>Kích thước: Ngang x Hông x Cao</div>
@@ -106,6 +110,7 @@ export default function LovedProducts() {
                     </>
                   )}
                 </div>
+                </a>
                 
                 <button 
                   onClick={(e) => removeLoved(product.id, e)}

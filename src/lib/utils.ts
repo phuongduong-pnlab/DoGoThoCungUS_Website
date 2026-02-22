@@ -10,6 +10,12 @@ export const toSlug = (str: string) => {
         .trim();
 };
 
+export const generateProductSlug = (name: string, sku: string) => {
+    const slugifiedName = toSlug(name);
+    // Use a specific delimiter so we can extract the SKU later
+    return `${slugifiedName}-p-${sku.toLowerCase()}`;
+};
+
 export const removeAccents = (str: string) => {
     return str
         .normalize('NFD')

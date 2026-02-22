@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { PRESETS } from '../../pages/api/admin/schema';
+import { generateProductSlug } from '../utils';
 
 const SUPABASE_URL = import.meta.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -90,6 +91,7 @@ export const getPublicProducts = async (page = 1, limit = 12, search = '', categ
 
             productMap.set(groupKey, {
                 id: row.sku,
+                slug: generateProductSlug(displayName, row.sku),
                 name: displayName,
                 baseName: row.name,
                 category: row.category,
@@ -127,7 +129,12 @@ export const getPublicProducts = async (page = 1, limit = 12, search = '', categ
     };
 };
 
-export const getPublicProductBySku = async (sku: string) => {
+export const getPublicProductBySlug = async (slug: string) => {
+    // Extract the SKU from the slug.
+    // Format is assumed to be `<slugified-name>-p-<sku>`
+    const parts = slug.split('-p-');
+    if (parts.length < 2) return null;
+    const sku = parts[parts.length - 1].toUpperCase();
     // 1. Fetch the seed product
     const { data: seedProduct, error: seedError } = await supabaseAdmin
         .from('products')
@@ -159,6 +166,7 @@ export const getPublicProductBySku = async (sku: string) => {
 
     return {
         id: seedProduct.sku, // Link identifier
+        slug: generateProductSlug(displayName, seedProduct.sku),
         name: displayName,
         baseName: seedProduct.name,
         category: seedProduct.category,

@@ -10,6 +10,7 @@ interface Product {
   name: string;
   category: string;
   price: string | number;
+  slug?: string;
   images: string[];
   variants: any[];
 }
@@ -210,6 +211,7 @@ export default function ProductList() {
               className="product-card"
               ref={isLast ? lastProductElementRef : null}
             >
+              <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                 <div className="card-image-wrapper">
                   <OptimizedImage 
                     src={product.images[0]} 
@@ -218,15 +220,17 @@ export default function ProductList() {
                     className="card-image-container"
                   />
                 </div>
+              </a>
 
               <div className="card-content">
-                <div className="card-header">
-                   <h3 className="card-title">
-                     {product.name}
-                   </h3>
-                </div>
-                
-                <div className="card-variants">
+                <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                  <div className="card-header">
+                     <h3 className="card-title">
+                       {product.name}
+                     </h3>
+                  </div>
+                  
+                  <div className="card-variants">
                   {product.variants && product.variants.length > 0 && (
                     <>
                       <div className="variant-info-row" style={{ fontSize: '0.75rem' ,color: 'white'}}>Kích thước: Ngang x Hông x Cao</div>
@@ -242,6 +246,7 @@ export default function ProductList() {
                     </>
                   )}
                 </div>
+                </a>
                 
                 <button 
                   onClick={(e) => addToLoved(product.id, e)}
