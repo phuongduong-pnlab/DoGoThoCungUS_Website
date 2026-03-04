@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import ProductList from "../components/ProductList";
 import LovedProducts from "../components/LovedProducts";
 import CustomerMap from "../components/CustomerMap";
+import Footer from "../components/Footer.astro";
 
 const messageValue = Astro.url.searchParams.get("message") || "";
 ---
@@ -147,6 +148,7 @@ const messageValue = Astro.url.searchParams.get("message") || "";
 			</div>
 		</div>
 	</section>
+	<Footer />
 </Layout>
 
 <style>

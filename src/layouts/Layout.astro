@@ -2,7 +2,7 @@
 import "../styles/global.css";
 
 import Navigation from "../components/Navigation.astro";
-import Footer from "../components/Footer.astro";
+
 import SEO from "../components/SEO.astro";
 
 interface Props {
@@ -32,6 +32,20 @@ const { title, description, image, mainClass = "", type } = Astro.props;
             href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Outfit:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
             rel="stylesheet"
         />
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-FB281MQVYP"
+        ></script>
+        <script is:inline>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-FB281MQVYP");
+        </script>
     </head>
 
     <body>
@@ -39,7 +53,7 @@ const { title, description, image, mainClass = "", type } = Astro.props;
         <main class={mainClass}>
             <slot />
         </main>
-        <Footer />
+
         <script>
             // Protection: Disable right-click on all images
             document.addEventListener(

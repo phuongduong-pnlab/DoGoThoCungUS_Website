@@ -211,7 +211,9 @@ export default function ProductList() {
               className="product-card"
               ref={isLast ? lastProductElementRef : null}
             >
-              <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+              <a 
+                // href={`/product/${product.slug}`} 
+                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                 <div className="card-image-wrapper">
                   <OptimizedImage 
                     src={product.images[0]} 
@@ -223,7 +225,9 @@ export default function ProductList() {
               </a>
 
               <div className="card-content">
-                <a href={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                <a 
+                // href={`/product/${product.slug}`} 
+                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                   <div className="card-header">
                      <h3 className="card-title">
                        {product.name}

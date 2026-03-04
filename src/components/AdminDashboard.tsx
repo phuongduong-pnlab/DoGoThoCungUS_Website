@@ -779,6 +779,36 @@ export default function AdminDashboard() {
                         <p>The system is currently using Supabase as the primary database.</p>
                         <div className="status-badge success">Connected</div>
                     </div>
+                    <div className="setting-card" style={{ marginTop: '20px' }}>
+                        <h3>Data Management</h3>
+                        <p>Scan all customer addresses from the database and extract new City/State locations to automatically update the map data (public/data/customers.csv).</p>
+                        <button 
+                            className="save-btn" 
+                            style={{ marginTop: '10px' }}
+                            onClick={async (e) => {
+                                const btn = e.target as HTMLButtonElement;
+                                const originalText = btn.innerText;
+                                btn.innerText = 'Scanning... (This may take a while)';
+                                btn.disabled = true;
+                                try {
+                                    const res = await fetch('/api/admin/extract-locations', { method: 'POST' });
+                                    const data = await res.json();
+                                    if (data.success) {
+                                        alert(`Success! Extracted and added ${data.added} new locations.`);
+                                    } else {
+                                        alert(`Error: ${data.error}`);
+                                    }
+                                } catch (err) {
+                                    alert('Request failed');
+                                } finally {
+                                    btn.innerText = originalText;
+                                    btn.disabled = false;
+                                }
+                            }}
+                        >
+                            Scan & Update Customer Locations
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
