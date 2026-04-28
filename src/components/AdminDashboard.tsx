@@ -765,7 +765,7 @@ const ProductReviewTable = ({ isMobileView, setIsMobileView }: { isMobileView: b
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('PRODUCTS'); // PRODUCTS, ORDERS, CUSTOMERS, SETTINGS
+  const [activeTab, setActiveTab] = useState('PRODUCT_REVIEW'); // PRODUCTS, ORDERS, CUSTOMERS, SETTINGS
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobileViewActive, setIsMobileViewActive] = useState(false);
   
@@ -830,6 +830,16 @@ export default function AdminDashboard() {
                     </button>
                 </div>
                 <nav title={sidebarCollapsed ? "Menu" : ""}>
+                    {!sidebarCollapsed && <div className="nav-label">Marketing</div>}
+                    <button className={activeTab === 'PRODUCT_REVIEW' ? 'active' : ''} onClick={() => setActiveTab('PRODUCT_REVIEW')} title="Product Review">
+                        <span className="nav-icon">⭐</span>
+                        {!sidebarCollapsed && <span>Products (Review)</span>}
+                    </button>
+
+                    
+                    
+                    <div className="divider"></div>
+                    {!sidebarCollapsed && <div className="nav-label">Database</div>}
                     <button className={activeTab === 'PRODUCTS' ? 'active' : ''} onClick={() => setActiveTab('PRODUCTS')} title="Products">
                         <span className="nav-icon">📦</span>
                         {!sidebarCollapsed && <span>Products (Raw)</span>}
@@ -845,13 +855,6 @@ export default function AdminDashboard() {
                     <button className={activeTab === 'INVENTORY' ? 'active' : ''} onClick={() => setActiveTab('INVENTORY')} title="Inventory">
                         <span className="nav-icon">📊</span>
                         {!sidebarCollapsed && <span>Inventory</span>}
-                    </button>
-                    
-                    <div className="divider"></div>
-                    {!sidebarCollapsed && <div className="nav-label">Marketing</div>}
-                    <button className={activeTab === 'PRODUCT_REVIEW' ? 'active' : ''} onClick={() => setActiveTab('PRODUCT_REVIEW')} title="Product Review">
-                        <span className="nav-icon">⭐</span>
-                        {!sidebarCollapsed && <span>Products (Review)</span>}
                     </button>
 
                     <div className="divider"></div>
