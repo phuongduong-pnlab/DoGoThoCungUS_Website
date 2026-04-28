@@ -399,12 +399,15 @@ const ImageWithSkeleton = ({ src, alt }: { src: string, alt: string }) => {
     );
 };
 
-const ProductReviewTable = () => {
+const ProductReviewTable = ({ isMobileView, setIsMobileView }: { isMobileView: boolean, setIsMobileView: (v: boolean) => void }) => {
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+    
+    // Mobile view state
+    const [selectedProductIndex, setSelectedProductIndex] = useState(0);
     
     // Modal state for clipboard ad copy
     const [showAdModal, setShowAdModal] = useState(false);
@@ -432,6 +435,7 @@ const ProductReviewTable = () => {
 
     useEffect(() => {
         setCurrentPage(1);
+        setSelectedProductIndex(0);
     }, [searchTerm]);
 
     const openAdModal = (product: any) => {
@@ -478,18 +482,146 @@ const ProductReviewTable = () => {
                 <div className="sheet-title">
                     <h3>Products (Review)</h3>
                 </div>
-                <div style={{display:'flex', gap:'10px'}}>
-                    <div className="search-wrapper">
-                         <input 
-                             placeholder="Search..." 
-                             value={searchTerm}
-                             onChange={e => setSearchTerm(e.target.value)}
-                             className="admin-search"
-                         />
-                    </div>
+                <div style={{display:'flex', gap:'10px', alignItems: 'center'}}>
+                    <button 
+                        className="save-btn" 
+                        onClick={() => setIsMobileView(!isMobileView)}
+                        style={{ backgroundColor: isMobileView ? 'var(--color-secondary)' : 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '5px' }}
+                    >
+                        {isMobileView ? '💻 Table View' : '📱 Mobile View'}
+                    </button>
+                    {!isMobileView && (
+                        <div className="search-wrapper">
+                             <input 
+                                 placeholder="Search..." 
+                                 value={searchTerm}
+                                 onChange={e => setSearchTerm(e.target.value)}
+                                 className="admin-search"
+                             />
+                             {searchTerm && (
+                                 <button 
+                                     className="search-clear" 
+                                     onClick={() => setSearchTerm('')}
+                                     title="Clear Search"
+                                 >✕</button>
+                             )}
+                        </div>
+                    )}
                 </div>
              </div>
              
+             {isMobileView ? (
+                 <div className="mobile-product-view" style={{marginTop: '-40px'}}>
+                     {/* Search Bar */}
+                     <div className="mobile-search-bar" style={{marginBottom: '0px'}}>
+                         <span className="search-icon">🔍</span>
+                         <input 
+                             placeholder="Search SKU or Product Name..." 
+                             value={searchTerm}
+                             onChange={e => setSearchTerm(e.target.value)}
+                         />
+                         {searchTerm && (
+                             <button 
+                                 className="search-clear" 
+                                 onClick={() => setSearchTerm('')}
+                                 title="Clear Search"
+                                 style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.5rem', marginRight: '0.2rem' }}
+                             >✕</button>
+                         )}
+                         {/* <button className="scanner-btn" title="Scan Barcode">📷</button> */}
+                     </div>
+
+                     {filteredData.length > 0 && filteredData[selectedProductIndex] ? (
+                         <div className="mobile-product-card">
+                             <div className="mobile-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                 <div className="mobile-listing-badge" style={{ marginBottom: 0 }}>ACTIVE LISTING</div>
+                                 {filteredData.length > 1 && (
+                                     <div className="mobile-pagination-top" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                         <button 
+                                             disabled={selectedProductIndex === 0} 
+                                             onClick={() => setSelectedProductIndex(p => p - 1)}
+                                             className="mobile-page-btn"
+                                         >←</button>
+                                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b' }}>{selectedProductIndex + 1} / {filteredData.length}</span>
+                                         <button 
+                                             disabled={selectedProductIndex === filteredData.length - 1} 
+                                             onClick={() => setSelectedProductIndex(p => p + 1)}
+                                             className="mobile-page-btn"
+                                         >→</button>
+                                     </div>
+                                 )}
+                             </div>
+                             <h3 className="mobile-product-name">{filteredData[selectedProductIndex].name}</h3>
+                             <div className="mobile-sku">SKU: {filteredData[selectedProductIndex].sku || 'N/A'}</div>
+
+                             <div className="mobile-product-hero">
+                                 <div className="mobile-image-container">
+                                     {filteredData[selectedProductIndex].images && filteredData[selectedProductIndex].images[0] ? (
+                                         <img src={filteredData[selectedProductIndex].images[0]} alt="Product" />
+                                     ) : (
+                                         <div className="no-image-placeholder" style={{color:'#94a3b8', padding: '20px'}}>No Image</div>
+                                     )}
+                                 </div>
+                                 <div className="mobile-stats">
+                                     <div className="stat-box dark">
+                                         <span className="stat-label">PRICE</span>
+                                         <span className="stat-value">
+                                             ${filteredData[selectedProductIndex].price || '0'}
+                                         </span>
+                                     </div>
+                                     <div className="stat-box light">
+                                         <span className="stat-label">PROFIT EST.</span>
+                                         <span className="stat-value-sm">
+                                             ${((parseFloat(filteredData[selectedProductIndex].price || '0') - parseFloat(filteredData[selectedProductIndex].cost_avg || '0') - parseFloat(filteredData[selectedProductIndex].shipping_estimate || '0') - (parseFloat(filteredData[selectedProductIndex].price || '0') * 0.075)) * 0.8).toFixed(2)}
+                                         </span>
+                                         {/* <span className="stat-sub">EST.</span> */}
+                                     </div>
+                                     <div className="stat-box gray">
+                                         <span className="stat-label">SHIPPING</span>
+                                         <span className="stat-value-sm">${filteredData[selectedProductIndex].shipping_estimate || '0'}</span>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div className="mobile-details-grid">
+                                 <div className="detail-item">
+                                     <span className="detail-label">SIZE</span>
+                                     <span className="detail-value">{filteredData[selectedProductIndex].size ? `${filteredData[selectedProductIndex].size}cm - ${formatSizeInches(filteredData[selectedProductIndex].size || '')}in` : 'N/A'}</span>
+                                 </div>
+                                 <div className="detail-item">
+                                     <span className="detail-label">MATERIAL</span>
+                                     <span className="detail-value">{filteredData[selectedProductIndex].material || 'N/A'}</span>
+                                 </div>
+                                 <div className="detail-item">
+                                     <span className="detail-label">COLOR</span>
+                                     <span className="detail-value">{filteredData[selectedProductIndex].color || 'N/A'}</span>
+                                 </div>
+                             </div>
+
+                             <div className="mobile-movement-log">
+                                 <div className="log-header">
+                                     <span>NOTES & COPY</span>
+                                     <button className="view-all-btn" onClick={() => openAdModal(filteredData[selectedProductIndex])}>View Ad Copy</button>
+                                 </div>
+                                 <div className="log-item">
+                                     <div className="log-icon">📝</div>
+                                     <div className="log-content">
+                                         <div className="log-title">Internal Note</div>
+                                         <div className="log-desc">{filteredData[selectedProductIndex].note || 'No notes available'}</div>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             {/* <button className="mobile-adjust-btn" onClick={() => openAdModal(filteredData[selectedProductIndex])}>
+                                 📋 COPY AD SCRIPT
+                             </button> */}
+                         </div>
+                     ) : (
+                         <div className="no-data-msg">No products match your search.</div>
+                     )}
+                 </div>
+             ) : (
+                 <>
              {loading ? <div className="loading">Loading products...</div> : (
                   <div className="table-container">
                       <table className="admin-table">
@@ -579,6 +711,8 @@ const ProductReviewTable = () => {
                      </div>
                  </div>
              )}
+                 </>
+             )}
 
              {showAdModal && (
                  <div className="modal-overlay" style={{alignItems: 'flex-start', overflowY: 'auto', padding: '40px 0'}}>
@@ -633,9 +767,15 @@ export default function AdminDashboard() {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('PRODUCTS'); // PRODUCTS, ORDERS, CUSTOMERS, SETTINGS
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isMobileViewActive, setIsMobileViewActive] = useState(false);
   
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Reset mobile view when switching tabs
+  useEffect(() => {
+      setIsMobileViewActive(false);
+  }, [activeTab]);
 
   // Check Keep-Alive
   useEffect(() => {
@@ -680,82 +820,84 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className={`admin-dashboard-layout ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        <div className="sidebar">
-            <div className="sidebar-header">
-                {!sidebarCollapsed && <span>Admin</span>}
-                <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
-                    {sidebarCollapsed ? '→' : '←'}
+    <div className={`admin-dashboard-layout ${sidebarCollapsed ? 'collapsed' : ''} ${isMobileViewActive ? 'mobile-view-active' : ''}`}>
+        {!isMobileViewActive && (
+            <div className="sidebar">
+                <div className="sidebar-header">
+                    {!sidebarCollapsed && <span>Admin</span>}
+                    <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
+                        {sidebarCollapsed ? '→' : '←'}
+                    </button>
+                </div>
+                <nav title={sidebarCollapsed ? "Menu" : ""}>
+                    <button className={activeTab === 'PRODUCTS' ? 'active' : ''} onClick={() => setActiveTab('PRODUCTS')} title="Products">
+                        <span className="nav-icon">📦</span>
+                        {!sidebarCollapsed && <span>Products (Raw)</span>}
+                    </button>
+                    <button className={activeTab === 'ORDERS' ? 'active' : ''} onClick={() => setActiveTab('ORDERS')} title="Orders">
+                        <span className="nav-icon">🧾</span>
+                        {!sidebarCollapsed && <span>Orders</span>}
+                    </button>
+                    <button className={activeTab === 'CUSTOMERS' ? 'active' : ''} onClick={() => setActiveTab('CUSTOMERS')} title="Customers">
+                        <span className="nav-icon">👤</span>
+                        {!sidebarCollapsed && <span>Customers</span>}
+                    </button>
+                    <button className={activeTab === 'INVENTORY' ? 'active' : ''} onClick={() => setActiveTab('INVENTORY')} title="Inventory">
+                        <span className="nav-icon">📊</span>
+                        {!sidebarCollapsed && <span>Inventory</span>}
+                    </button>
+                    
+                    <div className="divider"></div>
+                    {!sidebarCollapsed && <div className="nav-label">Marketing</div>}
+                    <button className={activeTab === 'PRODUCT_REVIEW' ? 'active' : ''} onClick={() => setActiveTab('PRODUCT_REVIEW')} title="Product Review">
+                        <span className="nav-icon">⭐</span>
+                        {!sidebarCollapsed && <span>Products (Review)</span>}
+                    </button>
+
+                    <div className="divider"></div>
+                    {!sidebarCollapsed && <div className="nav-label">Finance & Ops</div>}
+                    
+                    <button className={activeTab === 'BUSINESS' ? 'active' : ''} onClick={() => setActiveTab('BUSINESS')} title="Business">
+                        <span className="nav-icon">📈</span>
+                        {!sidebarCollapsed && <span>Business</span>}
+                    </button>
+                    <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} title="Debts">
+                        <span className="nav-icon">💰</span>
+                        {!sidebarCollapsed && <span>Debts</span>}
+                    </button>
+                    <button className={activeTab === 'SUPPLIERS' ? 'active' : ''} onClick={() => setActiveTab('SUPPLIERS')} title="Suppliers">
+                        <span className="nav-icon">🏭</span>
+                        {!sidebarCollapsed && <span>Suppliers</span>}
+                    </button>
+                    
+                    <div className="divider"></div>
+                    {!sidebarCollapsed && <div className="nav-label">Logistics</div>}
+                    
+                    <button className={activeTab === 'SHIPPING' ? 'active' : ''} onClick={() => setActiveTab('SHIPPING')} title="Shipping">
+                        <span className="nav-icon">🚚</span>
+                        {!sidebarCollapsed && <span>Shipping</span>}
+                    </button>
+                    <button className={activeTab === 'WARRANTY' ? 'active' : ''} onClick={() => setActiveTab('WARRANTY')} title="Warranty">
+                        <span className="nav-icon">🛡️</span>
+                        {!sidebarCollapsed && <span>Warranty</span>}
+                    </button>
+                    
+                    <div className="divider"></div>
+                    <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} title="Settings">
+                        <span className="nav-icon">⚙️</span>
+                        {!sidebarCollapsed && <span>Settings</span>}
+                    </button>
+                </nav>
+                <button className="logout-btn" onClick={handleLogout} title="Logout">
+                    <span className="nav-icon">🚪</span>
+                    {!sidebarCollapsed && <span>Logout</span>}
                 </button>
             </div>
-            <nav title={sidebarCollapsed ? "Menu" : ""}>
-                <button className={activeTab === 'PRODUCTS' ? 'active' : ''} onClick={() => setActiveTab('PRODUCTS')} title="Products">
-                    <span className="nav-icon">📦</span>
-                    {!sidebarCollapsed && <span>Products (Raw)</span>}
-                </button>
-                <button className={activeTab === 'ORDERS' ? 'active' : ''} onClick={() => setActiveTab('ORDERS')} title="Orders">
-                    <span className="nav-icon">🧾</span>
-                    {!sidebarCollapsed && <span>Orders</span>}
-                </button>
-                <button className={activeTab === 'CUSTOMERS' ? 'active' : ''} onClick={() => setActiveTab('CUSTOMERS')} title="Customers">
-                    <span className="nav-icon">👤</span>
-                    {!sidebarCollapsed && <span>Customers</span>}
-                </button>
-                <button className={activeTab === 'INVENTORY' ? 'active' : ''} onClick={() => setActiveTab('INVENTORY')} title="Inventory">
-                    <span className="nav-icon">📊</span>
-                    {!sidebarCollapsed && <span>Inventory</span>}
-                </button>
-                
-                <div className="divider"></div>
-                {!sidebarCollapsed && <div className="nav-label">Marketing</div>}
-                <button className={activeTab === 'PRODUCT_REVIEW' ? 'active' : ''} onClick={() => setActiveTab('PRODUCT_REVIEW')} title="Product Review">
-                    <span className="nav-icon">⭐</span>
-                    {!sidebarCollapsed && <span>Products (Review)</span>}
-                </button>
+        )}
 
-                <div className="divider"></div>
-                {!sidebarCollapsed && <div className="nav-label">Finance & Ops</div>}
-                
-                <button className={activeTab === 'BUSINESS' ? 'active' : ''} onClick={() => setActiveTab('BUSINESS')} title="Business">
-                    <span className="nav-icon">📈</span>
-                    {!sidebarCollapsed && <span>Business</span>}
-                </button>
-                <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} title="Debts">
-                    <span className="nav-icon">💰</span>
-                    {!sidebarCollapsed && <span>Debts</span>}
-                </button>
-                <button className={activeTab === 'SUPPLIERS' ? 'active' : ''} onClick={() => setActiveTab('SUPPLIERS')} title="Suppliers">
-                    <span className="nav-icon">🏭</span>
-                    {!sidebarCollapsed && <span>Suppliers</span>}
-                </button>
-                
-                <div className="divider"></div>
-                {!sidebarCollapsed && <div className="nav-label">Logistics</div>}
-                
-                <button className={activeTab === 'SHIPPING' ? 'active' : ''} onClick={() => setActiveTab('SHIPPING')} title="Shipping">
-                    <span className="nav-icon">🚚</span>
-                    {!sidebarCollapsed && <span>Shipping</span>}
-                </button>
-                <button className={activeTab === 'WARRANTY' ? 'active' : ''} onClick={() => setActiveTab('WARRANTY')} title="Warranty">
-                    <span className="nav-icon">🛡️</span>
-                    {!sidebarCollapsed && <span>Warranty</span>}
-                </button>
-                
-                <div className="divider"></div>
-                <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} title="Settings">
-                    <span className="nav-icon">⚙️</span>
-                    {!sidebarCollapsed && <span>Settings</span>}
-                </button>
-            </nav>
-            <button className="logout-btn" onClick={handleLogout} title="Logout">
-                <span className="nav-icon">🚪</span>
-                {!sidebarCollapsed && <span>Logout</span>}
-            </button>
-        </div>
-
-        <div className="main-content">
+        <div className="main-content" style={isMobileViewActive ? { padding: 0 } : {}}>
             {activeTab === 'PRODUCTS' && <GenericTable sheetName="products" />}
-            {activeTab === 'PRODUCT_REVIEW' && <ProductReviewTable />}
+            {activeTab === 'PRODUCT_REVIEW' && <ProductReviewTable isMobileView={isMobileViewActive} setIsMobileView={setIsMobileViewActive} />}
 
             {activeTab === 'ORDERS' && <GenericTable sheetName="orders" />}
             {activeTab === 'CUSTOMERS' && <GenericTable sheetName="customers" />}

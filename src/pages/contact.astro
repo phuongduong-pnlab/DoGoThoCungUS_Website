@@ -40,7 +40,7 @@ const messageValue = Astro.url.searchParams.get("message") || "";
                     />
 
                     <div class="form-group">
-                        <label for="name">Tên</label>
+                        <label for="name">Tên <span style="color:red">*</span></label>
                         <input
                             type="text"
                             id="name"
@@ -51,12 +51,21 @@ const messageValue = Astro.url.searchParams.get("message") || "";
                     </div>
 
                     <div class="form-group">
+                        <label for="phone">Số Điện Thoại</label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="Số điện thoại"
+                        />
+                    </div>
+
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input
                             type="email"
                             id="email"
                             name="email"
-                            required
                             placeholder="your.email@example.com"
                         />
                     </div>
@@ -161,3 +170,18 @@ const messageValue = Astro.url.searchParams.get("message") || "";
         background-color: var(--color-primary-dark);
     }
 </style>
+
+<script>
+    // Contact form validation
+    const forms = document.querySelectorAll('.contact-form');
+    forms.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            const email = (form.querySelector('input[name="email"]') as HTMLInputElement)?.value.trim();
+            const phone = (form.querySelector('input[name="phone"]') as HTMLInputElement)?.value.trim();
+            if (!email && !phone) {
+                e.preventDefault();
+                alert('Vui lòng nhập Email hoặc Số điện thoại để chúng tôi có thể liên hệ lại.');
+            }
+        });
+    });
+</script>

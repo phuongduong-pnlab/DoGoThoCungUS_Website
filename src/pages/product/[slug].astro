@@ -16,7 +16,11 @@ if (!product) {
 }
 ---
 
-<Layout title={product.name} description={product.description}>
+<Layout 
+    title={product.name} 
+    description={product.description}
+    image={product.images && product.images.length > 0 ? product.images[0] : undefined}
+>
     <div class="container section page-navigation">
         <div class="breadcrumbs">
             <a href="/">Home</a>
